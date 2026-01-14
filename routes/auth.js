@@ -19,6 +19,39 @@ const generateTokens = (userId) => {
   return { accessToken, refreshToken };
 };
 
+/**
+ * @swagger
+ * tags:
+ *   - name: Auth
+ *     description: Authentication endpoints
+ *
+ * /auth/register:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterRequest'
+ *     responses:
+ *       201:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Email taken
+ *       422:
+ *         description: Validation error
+ */
 authRouter.post('/register', async (req, res, next) => {
   try {
     const { email, password, fullName, phone } = req.body || {};
@@ -46,6 +79,33 @@ authRouter.post('/register', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Login with email and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Invalid credentials
+ */
 authRouter.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body || {};
@@ -71,6 +131,22 @@ authRouter.post('/login', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /auth/refresh-token:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Exchange refresh token for a new access token
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TokenResponse'
+ *       401:
+ *         description: Missing or invalid refresh token
+ */
 authRouter.post('/refresh-token', (req, res) => {
   const { refreshToken } = req.cookies || {};
   if (!refreshToken) {
@@ -92,6 +168,16 @@ authRouter.post('/refresh-token', (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Logout user (clears refresh cookie)
+ *     responses:
+ *       200:
+ *         description: Logged out
+ */
 authRouter.post('/logout', (_req, res) => {
   res.clearCookie('refreshToken');
   res.status(200).send({ message: 'Logged out successfully' });

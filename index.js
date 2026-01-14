@@ -14,6 +14,7 @@ app.get('/api', (_req, res) => {
   res.send({ message: 'Welcome to the SpaceX backend API' });
 });
 app.use('/api/auth', (await import('./routes/auth.js')).default);
+app.use('/api/docs', (await import('./swagger.js')).default);
 
 app.use((_req, res, _next) => {
   res.status(404).send({ error: 'Not Found' });
