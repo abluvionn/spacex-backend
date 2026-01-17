@@ -4,6 +4,7 @@ import config from '../config.js';
 import User from '../models/User.js';
 import { Error } from 'mongoose';
 import { formatValidationErrors } from '../utils/formatValidationErrors.js';
+import { verifyAccessToken } from '../middleware/auth.js';
 
 const authRouter = express.Router();
 
@@ -29,6 +30,8 @@ const generateTokens = (userId) => {
  *   post:
  *     tags: [Auth]
  *     summary: Register a new user
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -52,7 +55,7 @@ const generateTokens = (userId) => {
  *       422:
  *         description: Validation error
  */
-authRouter.post('/register', async (req, res, next) => {
+authRouter.post('/register', verifyAccessToken, async (req, res, next) => {
   try {
     const { email, password, fullName, phone } = req.body || {};
     const userExists = await User.findOne({ email });
