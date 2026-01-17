@@ -38,7 +38,7 @@ const applicationsRouter = express.Router();
  *       500:
  *         description: Internal server error
  */
-applicationsRouter.post('/', verifyAccessToken, async (req, res, next) => {
+applicationsRouter.post('/', async (req, res, next) => {
   try {
     const {
       fullName,
@@ -52,6 +52,16 @@ applicationsRouter.post('/', verifyAccessToken, async (req, res, next) => {
       comments,
     } = req.body || {};
 
+    // Convert truckTypes object to array of strings (only keys with true values)
+    let truckTypesArray = [];
+    if (truckTypes) {
+      const truckTypesObj =
+        typeof truckTypes === 'string' ? JSON.parse(truckTypes) : truckTypes;
+      truckTypesArray = Object.keys(truckTypesObj).filter(
+        (key) => truckTypesObj[key]
+      );
+    }
+
     const application = new Application({
       fullName,
       phoneNumber,
@@ -59,7 +69,7 @@ applicationsRouter.post('/', verifyAccessToken, async (req, res, next) => {
       cdlLicense,
       state,
       drivingExperience,
-      truckTypes,
+      truckTypes: truckTypesArray,
       longHaulTrips,
       comments,
     });
@@ -143,6 +153,49 @@ applicationsRouter.get('/', verifyAccessToken, async (req, res, next) => {
         pages: Math.ceil(total / limit),
       },
     });
+  } catch (e) {
+    next(e);
+  }
+});
+
+/**
+ * @swagger
+ * /applications/{id}:
+ *   get:
+ *     tags: [Applications]
+ *     summary: Get application by ID
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Application ID
+ *     responses:
+ *       200:
+ *         description: Application found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Application'
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Application not found
+ *       500:
+ *         description: Internal server error
+ */
+applicationsRouter.get('/:id', verifyAccessToken, async (req, res, next) => {
+  try {
+    const application = await Application.findById(req.params.id);
+
+    if (!application) {
+      return res.status(404).send({ error: 'Application not found' });
+    }
+
+    res.status(200).send(application);
   } catch (e) {
     next(e);
   }

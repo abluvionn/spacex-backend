@@ -28,7 +28,7 @@ const ApplicationSchema = new Schema(
       required: [true, 'Driving experience is required'],
     },
     truckTypes: {
-      type: Object,
+      type: [String],
       required: [true, 'Truck types are required'],
     },
     longHaulTrips: {

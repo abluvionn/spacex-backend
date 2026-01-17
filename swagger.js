@@ -63,8 +63,8 @@ const options = {
             state: { type: 'string', example: 'CA' },
             drivingExperience: { type: 'string', example: '5 years' },
             truckTypes: {
-              type: 'object',
-              additionalProperties: { type: 'boolean' },
+              type: 'array',
+              items: { type: 'string' },
             },
             longHaulTrips: {
               type: 'string',
@@ -103,8 +103,8 @@ const options = {
             state: { type: 'string', example: 'CA' },
             drivingExperience: { type: 'string', example: '5 years' },
             truckTypes: {
-              type: 'object',
-              additionalProperties: { type: 'boolean' },
+              type: 'array',
+              items: { type: 'string' },
             },
             longHaulTrips: {
               type: 'string',

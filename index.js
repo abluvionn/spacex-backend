@@ -9,7 +9,7 @@ const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: config.IpWhiteList, credentials: true }));
 app.use(cookieParser());
 app.use(upload.none());
 
