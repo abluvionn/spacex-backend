@@ -9,7 +9,16 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: { title: 'SpaceX Backend API', version: '1.0.0' },
-    servers: [{ url: `http://localhost:${config.port}/api` }],
+    servers: [
+      {
+        url: `http://localhost:${config.port}/api`,
+        description: 'Local server',
+      },
+      {
+        url: process.env.PRODUCTION_URL || '',
+        description: 'Production server',
+      },
+    ],
     components: {
       securitySchemes: {
         BearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
@@ -30,18 +39,26 @@ const options = {
           type: 'object',
           required: ['email', 'password', 'fullName', 'phone'],
           properties: {
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string' },
-            fullName: { type: 'string' },
-            phone: { type: 'string' },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'user@example.com',
+            },
+            password: { type: 'string', example: 'password123' },
+            fullName: { type: 'string', example: 'John Doe' },
+            phone: { type: 'string', example: '+1234567890' },
           },
         },
         LoginRequest: {
           type: 'object',
           required: ['email', 'password'],
           properties: {
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string' },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'user@example.com',
+            },
+            password: { type: 'string', example: 'password123' },
           },
         },
         TokenResponse: {
@@ -65,6 +82,7 @@ const options = {
             truckTypes: {
               type: 'array',
               items: { type: 'string' },
+              example: ['Flatbed', 'Tanker'],
             },
             longHaulTrips: {
               type: 'string',
@@ -105,6 +123,7 @@ const options = {
             truckTypes: {
               type: 'array',
               items: { type: 'string' },
+              example: ['Flatbed', 'Tanker'],
             },
             longHaulTrips: {
               type: 'string',
