@@ -32,8 +32,7 @@ const ApplicationSchema = new Schema(
       required: [true, 'Truck types are required'],
     },
     longHaulTrips: {
-      type: String,
-      enum: ['yes', 'no'],
+      type: Boolean,
       required: [true, 'Long haul trips preference is required'],
     },
     comments: {
@@ -44,7 +43,7 @@ const ApplicationSchema = new Schema(
       default: false,
     },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: true },
 );
 
 ApplicationSchema.methods.toggleArchived = function () {

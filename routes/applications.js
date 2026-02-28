@@ -142,7 +142,7 @@ applicationsRouter.get('/', verifyAccessToken, async (req, res, next) => {
     const skip = (page - 1) * limit;
 
     const total = await Application.countDocuments();
-    const applications = await Application.find().skip(skip).limit(limit);
+    const applications = await Application.find().skip(skip).limit(limit).sort({ createdAt: -1 });
 
     res.status(200).send({
       data: applications,

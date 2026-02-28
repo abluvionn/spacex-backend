@@ -85,9 +85,8 @@ const options = {
               example: ['Flatbed', 'Tanker'],
             },
             longHaulTrips: {
-              type: 'string',
-              enum: ['yes', 'no'],
-              example: 'yes',
+              type: 'boolean',
+              example: true,
             },
             comments: {
               type: 'string',
@@ -126,9 +125,8 @@ const options = {
               example: ['Flatbed', 'Tanker'],
             },
             longHaulTrips: {
-              type: 'string',
-              enum: ['yes', 'no'],
-              example: 'yes',
+              type: 'boolean',
+              example: true,
             },
             comments: {
               type: 'string',
