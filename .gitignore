@@ -1,2 +1,5 @@
 node_modules
 .env
+
+# directory used to store resume uploads
+uploads

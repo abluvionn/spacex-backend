@@ -1,17 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import multer from 'multer';
 import mongoose from 'mongoose';
 import config from './config.js';
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(express.json());
 app.use(cors({ origin: config.IpWhiteList, credentials: true }));
 app.use(cookieParser());
-app.use(upload.none());
 
 app.get('/api', (_req, res) => {
   res.send({ message: 'Welcome to the SpaceX backend API' });
@@ -19,7 +16,7 @@ app.get('/api', (_req, res) => {
 app.use('/api/auth', (await import('./routes/auth.js')).default);
 app.use(
   '/api/applications',
-  (await import('./routes/applications.js')).default
+  (await import('./routes/applications.js')).default,
 );
 app.use('/api/docs', (await import('./swagger.js')).default);
 

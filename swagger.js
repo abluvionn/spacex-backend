@@ -92,6 +92,10 @@ const options = {
               type: 'string',
               example: 'Experienced driver looking for new opportunities',
             },
+            resumeUrl: {
+              type: 'string',
+              example: '/api/applications/6967945bd6e92f8fd828ac24/resume',
+            },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time' },
           },
@@ -131,6 +135,11 @@ const options = {
             comments: {
               type: 'string',
               example: 'Experienced driver looking for new opportunities',
+            },
+            resume: {
+              type: 'string',
+              format: 'binary',
+              description: 'PDF or DOC file containing applicant resume',
             },
           },
         },

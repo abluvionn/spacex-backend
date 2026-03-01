@@ -38,18 +38,38 @@ const ApplicationSchema = new Schema(
     comments: {
       type: String,
     },
+    // path on the local filesystem where the uploaded resume was saved
+    resumePath: {
+      type: String,
+    },
+    resumeFilename: {
+      type: String,
+    },
     archived: {
       type: Boolean,
       default: false,
     },
   },
-  { versionKey: false, timestamps: true },
+  {
+    versionKey: false,
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
 
 ApplicationSchema.methods.toggleArchived = function () {
   this.archived = !this.archived;
   return this.save();
 };
+
+// virtual property that clients can use to fetch the resume file
+ApplicationSchema.virtual('resumeUrl').get(function () {
+  if (this.resumePath) {
+    return `applications/${this._id}/resume`;
+  }
+  return null;
+});
 
 const Application = model('Application', ApplicationSchema);
 
