@@ -190,6 +190,7 @@ applicationsRouter.get(
  *       500:
  *         description: Internal server error
  */
+// paginated list of applications
 applicationsRouter.get('/', verifyAccessToken, async (req, res, next) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -211,6 +212,38 @@ applicationsRouter.get('/', verifyAccessToken, async (req, res, next) => {
         pages: Math.ceil(total / limit),
       },
     });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// unbounded list (no pagination)
+/**
+ * @swagger
+ * /applications/all:
+ *   get:
+ *     tags: [Applications]
+ *     summary: Get all applications without pagination (authenticated users only)
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Array of application objects
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Application'
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+applicationsRouter.get('/all', verifyAccessToken, async (req, res, next) => {
+  try {
+    const applications = await Application.find().sort({ createdAt: -1 });
+    res.status(200).send(applications);
   } catch (e) {
     next(e);
   }

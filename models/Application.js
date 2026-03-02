@@ -53,7 +53,13 @@ const ApplicationSchema = new Schema(
   {
     versionKey: false,
     timestamps: true,
-    toJSON: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: (_doc, ret) => {
+        delete ret.id;
+        return ret;
+      },
+    },
     toObject: { virtuals: true },
   },
 );
