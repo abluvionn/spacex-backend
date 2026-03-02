@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 
+export const STATUS_ENUM = ['pending', 'reviewing', 'rejected', 'accepted'];
+
 const ApplicationSchema = new Schema(
   {
     fullName: {
@@ -38,16 +40,17 @@ const ApplicationSchema = new Schema(
     comments: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: STATUS_ENUM,
+      default: 'pending',
+    },
     // path on the local filesystem where the uploaded resume was saved
     resumePath: {
       type: String,
     },
     resumeFilename: {
       type: String,
-    },
-    archived: {
-      type: Boolean,
-      default: false,
     },
   },
   {
@@ -64,9 +67,12 @@ const ApplicationSchema = new Schema(
   },
 );
 
-ApplicationSchema.methods.toggleArchived = function () {
-  this.archived = !this.archived;
-  return this.save();
+ApplicationSchema.methods.updateStatus = function (newStatus) {
+  if (STATUS_ENUM.includes(newStatus)) {
+    this.status = newStatus;
+    return this.save();
+  }
+  throw new Error('Invalid status value');
 };
 
 // virtual property that clients can use to fetch the resume file

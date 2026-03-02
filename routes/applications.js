@@ -1,6 +1,6 @@
 import express from 'express';
 import { Error } from 'mongoose';
-import Application from '../models/Application.js';
+import Application, { STATUS_ENUM } from '../models/Application.js';
 import { formatValidationErrors } from '../utils/formatValidationErrors.js';
 import { verifyAccessToken } from '../middleware/auth.js';
 import { upload } from '../utils/upload.js';
@@ -162,6 +162,12 @@ applicationsRouter.get(
  *           type: integer
  *           default: 10
  *         description: Number of applications per page
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: ['pending','reviewing','rejected','accepted']
+ *         description: Filter by application status
  *     responses:
  *       200:
  *         description: Paginated list of applications
@@ -197,8 +203,17 @@ applicationsRouter.get('/', verifyAccessToken, async (req, res, next) => {
     const limit = Math.max(1, parseInt(req.query.limit) || 10);
     const skip = (page - 1) * limit;
 
-    const total = await Application.countDocuments();
-    const applications = await Application.find()
+    // allow optional status filter
+    const filter = {};
+    if (req.query.status) {
+      // only include valid statuses to avoid invalid filters
+      if (STATUS_ENUM.includes(req.query.status)) {
+        filter.status = req.query.status;
+      }
+    }
+
+    const total = await Application.countDocuments(filter);
+    const applications = await Application.find(filter)
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -226,6 +241,13 @@ applicationsRouter.get('/', verifyAccessToken, async (req, res, next) => {
  *     summary: Get all applications without pagination (authenticated users only)
  *     security:
  *       - BearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: ['pending','reviewing','rejected','accepted']
+ *         description: Filter by application status
  *     responses:
  *       200:
  *         description: Array of application objects
@@ -242,7 +264,13 @@ applicationsRouter.get('/', verifyAccessToken, async (req, res, next) => {
  */
 applicationsRouter.get('/all', verifyAccessToken, async (req, res, next) => {
   try {
-    const applications = await Application.find().sort({ createdAt: -1 });
+    const filter = {};
+    if (req.query.status) {
+      if (STATUS_ENUM.includes(req.query.status)) {
+        filter.status = req.query.status;
+      }
+    }
+    const applications = await Application.find(filter).sort({ createdAt: -1 });
     res.status(200).send(applications);
   } catch (e) {
     next(e);
@@ -294,10 +322,10 @@ applicationsRouter.get('/:id', verifyAccessToken, async (req, res, next) => {
 
 /**
  * @swagger
- * /applications/{id}/toggle-archive:
+ * /applications/{id}/status:
  *   patch:
  *     tags: [Applications]
- *     summary: Toggle archived status of an application
+ *     summary: Update status of an application
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -307,13 +335,21 @@ applicationsRouter.get('/:id', verifyAccessToken, async (req, res, next) => {
  *         schema:
  *           type: string
  *         description: Application ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ApplicationStatusRequest'
  *     responses:
  *       200:
- *         description: Application archived status toggled successfully
+ *         description: Application status updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Application'
+ *       400:
+ *         description: Invalid status value
  *       401:
  *         description: Unauthorized
  *       404:
@@ -323,7 +359,7 @@ applicationsRouter.get('/:id', verifyAccessToken, async (req, res, next) => {
  */
 
 applicationsRouter.patch(
-  '/:id/toggle-archive',
+  '/:id/status',
   verifyAccessToken,
   async (req, res, next) => {
     try {
@@ -334,8 +370,12 @@ applicationsRouter.patch(
         return;
       }
 
-      await application.toggleArchived();
-      res.status(200).send(application);
+      try {
+        await application.updateStatus(req.body.status);
+        res.status(200).send(application);
+      } catch (err) {
+        res.status(400).send({ error: err.message });
+      }
     } catch (e) {
       next(e);
     }

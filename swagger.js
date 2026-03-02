@@ -92,6 +92,11 @@ const options = {
               type: 'string',
               example: 'Experienced driver looking for new opportunities',
             },
+            status: {
+              type: 'string',
+              enum: ['pending', 'reviewing', 'rejected', 'accepted'],
+              example: 'pending',
+            },
             resumeUrl: {
               type: 'string',
               example: '/api/applications/6967945bd6e92f8fd828ac24/resume',
@@ -140,6 +145,17 @@ const options = {
               type: 'string',
               format: 'binary',
               description: 'PDF or DOC file containing applicant resume',
+            },
+          },
+        },
+        ApplicationStatusRequest: {
+          type: 'object',
+          required: ['status'],
+          properties: {
+            status: {
+              type: 'string',
+              enum: ['pending', 'reviewing', 'rejected', 'accepted'],
+              example: 'accepted',
             },
           },
         },

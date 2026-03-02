@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import config from './config.js';
 import User from './models/User.js';
-import Application from './models/Application.js';
 
 const dropCollection = async (db, collectionName) => {
   try {

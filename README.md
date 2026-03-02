@@ -58,7 +58,7 @@ curl -X POST http://localhost:3000/api/applications \
 ## Models
 
 - `User.js` represents user data.
-- `Application.js` represents application data. Applications now support an optional `resume` upload; files are saved under `uploads/resumes` and a `resumeUrl` is exposed on returned documents.
+- `Application.js` represents application data. Applications now include a `status` field (pending, reviewing, rejected, accepted, etc.) instead of a simple archived flag. Applications also support an optional `resume` upload; files are saved under `uploads/resumes` and a `resumeUrl` is exposed on returned documents.
 
 ## Utils
 
