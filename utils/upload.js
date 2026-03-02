@@ -9,7 +9,8 @@ fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 // disk storage configuration for resume files
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
-  filename: (_req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+  filename: (_req, file, cb) =>
+    cb(null, `${new Date().toISOString().split('T')[0]}-${file.originalname}`),
 });
 
 // exported middleware so routes can opt‑in when they need file parsing
