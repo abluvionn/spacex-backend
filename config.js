@@ -7,6 +7,14 @@ const config = {
   mongoose: {
     db: process.env['MONGO_DB_URL'] || 'mongodb://127.0.0.1:27017/spacex',
   },
+  admin: {
+    email: process.env['ADMIN_EMAIL'] || '',
+    password: process.env['ADMIN_PASSWORD'] || '',
+  },
+  gmail: {
+    user: process.env['GMAIL_USER'] || '',
+    pass: process.env['GMAIL_PASS'] || '',
+  },
   IpWhiteList: [
     'http://localhost:3000',
     'http://localhost:5173',

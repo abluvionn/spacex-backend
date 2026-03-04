@@ -5,6 +5,18 @@ import { formatValidationErrors } from '../utils/formatValidationErrors.js';
 import { verifyAccessToken } from '../middleware/auth.js';
 import { upload } from '../utils/upload.js';
 import path from 'path';
+import nodemailer from 'nodemailer';
+import config from '../config.js';
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: config.gmail.user,
+    pass: config.gmail.pass,
+  },
+});
 
 const applicationsRouter = express.Router();
 
@@ -83,6 +95,69 @@ applicationsRouter.post(
 
       await application.save();
       res.status(201).send(application);
+
+      const mailOptions = {
+        from: 'SpaceX',
+        to: config.admin.email,
+        subject: `New application submitted by ${application.fullName}`,
+        html: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2 style="color: #2c3e50;">New Application Received</h2>
+          <p>A candidate has just submitted an application with the following details:</p>
+          <table style="width:100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>Full Name</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.fullName}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>Email</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.email}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>Phone Number</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.phoneNumber}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>CDL License</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.cdlLicense}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>State</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.state}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>Driving Experience</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.drivingExperience}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>Truck Types</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.truckTypes.join(', ')}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>Long Haul Trips?</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.longHaulTrips ? 'Yes' : 'No'}</td>
+            </tr>
+            ${
+              application.comments
+                ? `
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;"><strong>Comments</strong></td>
+              <td style="padding:8px; border:1px solid #ddd;">${application.comments}</td>
+            </tr>`
+                : ''
+            }
+          </table>
+          ${application.resumePath ? `<p>Resume file saved at: ${application.resumeFilename}</p>` : ''}
+          <p style="font-size:0.9em; color:#777;">--<br/>This notification was generated automatically by the SpaceX application system.</p>
+        </div>`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.error('Error sending email:', error);
+        }
+        console.log('Email sent successfully:', info);
+      });
     } catch (e) {
       if (e instanceof Error.ValidationError) {
         const structuredErrors = formatValidationErrors(e);

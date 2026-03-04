@@ -23,8 +23,8 @@ const run = async () => {
 
     await User.create([
       {
-        email: 'spacex.admin@gmail.com',
-        password: 'adminpass',
+        email: config.admin.email,
+        password: config.admin.password,
         fullName: 'Admin User',
         phone: '555-1234',
       },
