@@ -3,9 +3,15 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import config from './config.js';
+import { rateLimit } from 'express-rate-limit';
 
 const app = express();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // limit each IP to 100 requests per windowMs
+});
 
+app.use(limiter);
 app.use(express.json());
 app.use(cors({ origin: config.IpWhiteList, credentials: true }));
 app.use(cookieParser());
