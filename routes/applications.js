@@ -97,7 +97,7 @@ applicationsRouter.post(
       res.status(201).send(application);
 
       const mailOptions = {
-        from: 'SpaceX',
+        from: 'SpaceX <no-reply@spacex.com>',
         to: config.admin.email,
         subject: `New application submitted by ${application.fullName}`,
         html: `
@@ -447,6 +447,30 @@ applicationsRouter.patch(
 
       try {
         await application.updateStatus(req.body.status);
+
+        if (req.body.status === 'accepted') {
+          const mailOptions = {
+            from: 'SpaceX <no-reply@spacex.com>',
+            to: application.email,
+            subject: '🎉 Your SpaceX application has been accepted!',
+            html: `
+              <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #2c3e50;">Congratulations!</h2>
+                <p style="font-size: 1.2rem;">We are excited to let you know that your application to <strong>SpaceX company</strong> has been accepted.</p>
+                <p style="font-size: 1.2rem;">🚀 Our team will reach out soon with the next steps to move forward.</p>
+                <p style="font-size:0.9em; color:#777;">Thank you for applying</p>
+              </div>
+            `,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return console.error('Error sending acceptance email:', error);
+            }
+            console.log('Acceptance email sent successfully:', info);
+          });
+        }
+
         res.status(200).send(application);
       } catch (err) {
         res.status(400).send({ error: err.message });
