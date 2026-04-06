@@ -469,6 +469,27 @@ applicationsRouter.patch(
             }
             console.log('Acceptance email sent successfully:', info);
           });
+        } else if (req.body.status === 'rejected') {
+          const mailOptions = {
+            from: 'SpaceX <no-reply@spacex.com>',
+            to: application.email,
+            subject: '😔 Application Update from SpaceX',
+            html: `
+              <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #2c3e50;">We're Sorry</h2>
+                <p style="font-size: 1.2rem;">Unfortunately, your application to <strong>SpaceX company</strong> has been rejected at this time.</p>
+                <p style="font-size: 1.2rem;">😔 We appreciate your interest and encourage you to apply again in the future. 🚚</p>
+                <p style="font-size:0.9em; color:#777;">Thank you for your application</p>
+              </div>
+            `,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return console.error('Error sending rejection email:', error);
+            }
+            console.log('Rejection email sent successfully:', info);
+          });
         }
 
         res.status(200).send(application);

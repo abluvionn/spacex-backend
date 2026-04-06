@@ -15,11 +15,7 @@ const config = {
     user: process.env['GMAIL_USER'] || '',
     pass: process.env['GMAIL_PASS'] || '',
   },
-  IpWhiteList: [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    process.env['ALLOWED_ORIGIN'],
-  ],
+  IpWhiteList: ['http://localhost:3000', process.env['ALLOWED_ORIGIN']],
   JwtAccessExpiresAt: 15, // 15 minutes
   JwtRefreshExpiresAt: 720, // 720 hours = 30 days
 };
