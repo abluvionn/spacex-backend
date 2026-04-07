@@ -8,8 +8,13 @@ This repository contains a simple Node.js backend for a SpaceX application. It p
 config.js
 fixtures.js
 index.js
+jest.config.js
 package.json
 swagger.js
+__tests__/
+    controllers/
+        applicationController.test.js
+        authController.test.js
 middleware/
     auth.js
 models/
@@ -25,13 +30,29 @@ utils/
 ## Installation
 
 1. Ensure Node.js (version 14 or higher) is installed.
-2. Run `npm install` to install dependencies.
+2. Run `npm install` to install dependencies (including Jest for testing).
 
 ## Usage
 
 - Start the server with `npm run dev`.
 - API endpoints are defined in the `routes` directory.
 - Swagger documentation is available via the `swagger.js` configuration.
+
+## Testing
+
+This project includes comprehensive unit tests for controllers using Jest.
+
+### Running Tests
+
+- Run all tests: `npm test`
+- Run tests in watch mode: `npm run test:watch`
+- Run tests with coverage: `npm run test:coverage`
+
+### Test Structure
+
+- Tests are located in the `__tests__` directory
+- Controller tests are organized by controller name
+- Tests cover authentication, application creation, and error handling scenarios
 
 ### Uploading an application
 
