@@ -1,14 +1,14 @@
-import { createApplication } from '../../controllers/applicationController.js';
-import Application from '../../models/Application.js';
+import { createApplication } from '../../controllers/userApplicationController.js';
+import UserApplication from '../../models/UserApplication.js';
 import { Error as MongooseError } from 'mongoose';
 
-// Mock the Application model
-jest.mock('../../models/Application.js');
+// Mock the UserApplication model
+jest.mock('../../models/UserApplication.js');
 
 // Mock the sendAdminNotification function
-jest.mock('../../controllers/applicationController.js', () => {
+jest.mock('../../controllers/userApplicationController.js', () => {
   const actual = jest.requireActual(
-    '../../controllers/applicationController.js',
+    '../../controllers/userApplicationController.js',
   );
   return {
     ...actual,
@@ -32,7 +32,7 @@ jest.mock('../../utils/formatValidationErrors.js', () => ({
     .mockReturnValue({ fullName: 'Field is required' }),
 }));
 
-describe('applicationController', () => {
+describe('userApplicationController', () => {
   describe('createApplication', () => {
     let mockReq;
     let mockRes;
@@ -68,7 +68,7 @@ describe('applicationController', () => {
       // Mock next function
       mockNext = jest.fn();
 
-      // Mock Application instance
+      // Mock UserApplication instance
       mockApplicationInstance = {
         _id: '123',
         fullName: 'John Doe',
@@ -85,12 +85,12 @@ describe('applicationController', () => {
     });
 
     describe('successful creation', () => {
-      it('should create an application with valid data and return 201', async () => {
-        Application.mockImplementation(() => mockApplicationInstance);
+      it('should create an userApplication with valid data and return 201', async () => {
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
-        expect(Application).toHaveBeenCalledWith(
+        expect(UserApplication).toHaveBeenCalledWith(
           expect.objectContaining({
             fullName: 'John Doe',
             phoneNumber: '555-1234',
@@ -111,11 +111,11 @@ describe('applicationController', () => {
 
       it('should handle truckTypes as a JSON string', async () => {
         mockReq.body.truckTypes = '{"flatbed":true,"tanker":false}';
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
-        expect(Application).toHaveBeenCalledWith(
+        expect(UserApplication).toHaveBeenCalledWith(
           expect.objectContaining({
             truckTypes: ['flatbed'],
           }),
@@ -125,11 +125,11 @@ describe('applicationController', () => {
       it('should handle truckTypes as an object', async () => {
         mockReq.body.truckTypes = { flatbed: true, tanker: true, dump: false };
         mockApplicationInstance.truckTypes = ['flatbed', 'tanker'];
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
-        expect(Application).toHaveBeenCalledWith(
+        expect(UserApplication).toHaveBeenCalledWith(
           expect.objectContaining({
             truckTypes: expect.arrayContaining(['flatbed', 'tanker']),
           }),
@@ -144,11 +144,11 @@ describe('applicationController', () => {
           filename: 'resume-123.pdf',
         };
 
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
-        expect(Application).toHaveBeenCalledWith(
+        expect(UserApplication).toHaveBeenCalledWith(
           expect.objectContaining({
             resumePath: '/uploads/resumes/resume-123.pdf',
             resumeFilename: 'resume-123.pdf',
@@ -157,11 +157,11 @@ describe('applicationController', () => {
       });
 
       it('should not include resumePath when no file is uploaded', async () => {
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
-        expect(Application).toHaveBeenCalledWith(
+        expect(UserApplication).toHaveBeenCalledWith(
           expect.objectContaining({
             resumePath: undefined,
             resumeFilename: undefined,
@@ -176,7 +176,7 @@ describe('applicationController', () => {
         const validationError = new MongooseError.ValidationError();
 
         mockApplicationInstance.save.mockRejectedValueOnce(validationError);
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
@@ -187,7 +187,7 @@ describe('applicationController', () => {
       it('should pass other errors to next middleware', async () => {
         const error = new Error('Database error');
         mockApplicationInstance.save.mockRejectedValueOnce(error);
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
@@ -199,11 +199,11 @@ describe('applicationController', () => {
       it('should handle empty truckTypes', async () => {
         mockReq.body.truckTypes = { flatbed: false, tanker: false };
         mockApplicationInstance.truckTypes = [];
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 
-        expect(Application).toHaveBeenCalledWith(
+        expect(UserApplication).toHaveBeenCalledWith(
           expect.objectContaining({
             truckTypes: [],
           }),
@@ -216,7 +216,7 @@ describe('applicationController', () => {
           email: 'jane@example.com',
         };
 
-        Application.mockImplementation(() => mockApplicationInstance);
+        UserApplication.mockImplementation(() => mockApplicationInstance);
 
         await createApplication(mockReq, mockRes, mockNext);
 

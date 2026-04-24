@@ -24,14 +24,14 @@ const authRouter = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         userApplication/json:
  *           schema:
  *             $ref: '#/components/schemas/RegisterRequest'
  *     responses:
  *       201:
  *         description: Created
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
  *               type: object
  *               properties:
@@ -55,14 +55,14 @@ authRouter.post('/register', verifyAccessToken, registerUser);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         userApplication/json:
  *           schema:
  *             $ref: '#/components/schemas/LoginRequest'
  *     responses:
  *       200:
  *         description: OK
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
  *               type: object
  *               properties:
@@ -85,7 +85,7 @@ authRouter.post('/login', loginUser);
  *       200:
  *         description: OK
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
  *               $ref: '#/components/schemas/TokenResponse'
  *       401:

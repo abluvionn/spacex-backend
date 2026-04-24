@@ -8,20 +8,20 @@ import {
   listAllApplications,
   getApplicationById,
   updateApplicationStatus,
-} from '../controllers/applicationController.js';
+} from '../controllers/userApplicationController.js';
 
-const applicationsRouter = express.Router();
+const userApplicationsRouter = express.Router();
 
 /**
  * @swagger
  * tags:
  *   - name: Applications
- *     description: Application endpoints
+ *     description: UserApplication endpoints
  *
- * /applications:
+ * /userApplications:
  *   post:
  *     tags: [Applications]
- *     summary: Create a new application (multipart/form-data with optional resume file)
+ *     summary: Create a new userApplication (multipart/form-data with optional resume file)
  *     security:
  *       - BearerAuth: []
  *     requestBody:
@@ -32,11 +32,11 @@ const applicationsRouter = express.Router();
  *             $ref: '#/components/schemas/ApplicationRequest'
  *     responses:
  *       201:
- *         description: Application created successfully
+ *         description: UserApplication created successfully
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
- *               $ref: '#/components/schemas/Application'
+ *               $ref: '#/components/schemas/UserApplication'
  *       401:
  *         description: Unauthorized
  *       422:
@@ -44,15 +44,15 @@ const applicationsRouter = express.Router();
  *       500:
  *         description: Internal server error
  */
-applicationsRouter.post('/', upload.single('resume'), createApplication);
+userApplicationsRouter.post('/', upload.single('resume'), createApplication);
 
-// serve raw resume file for a specific application
+// serve raw resume file for a specific userApplication
 /**
  * @swagger
- * /applications/{id}/resume:
+ * /userApplications/{id}/resume:
  *   get:
  *     tags: [Applications]
- *     summary: Download the resume associated with an application
+ *     summary: Download the resume associated with an userApplication
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -61,12 +61,12 @@ applicationsRouter.post('/', upload.single('resume'), createApplication);
  *         required: true
  *         schema:
  *           type: string
- *         description: Application ID
+ *         description: UserApplication ID
  *     responses:
  *       200:
  *         description: Resume file returned as binary
  *         content:
- *           application/octet-stream:
+ *           userApplication/octet-stream:
  *             schema:
  *               type: string
  *               format: binary
@@ -77,14 +77,14 @@ applicationsRouter.post('/', upload.single('resume'), createApplication);
  *       500:
  *         description: Internal server error
  */
-applicationsRouter.get('/:id/resume', verifyAccessToken, downloadResume);
+userApplicationsRouter.get('/:id/resume', verifyAccessToken, downloadResume);
 
 /**
  * @swagger
- * /applications:
+ * /userApplications:
  *   get:
  *     tags: [Applications]
- *     summary: Get all applications (authenticated users only)
+ *     summary: Get all userApplications (authenticated users only)
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -99,25 +99,25 @@ applicationsRouter.get('/:id/resume', verifyAccessToken, downloadResume);
  *         schema:
  *           type: integer
  *           default: 10
- *         description: Number of applications per page
+ *         description: Number of userApplications per page
  *       - in: query
  *         name: status
  *         schema:
  *           type: string
  *           enum: ['pending','reviewing','rejected','accepted']
- *         description: Filter by application status
+ *         description: Filter by userApplication status
  *     responses:
  *       200:
- *         description: Paginated list of applications
+ *         description: Paginated list of userApplications
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
  *               type: object
  *               properties:
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Application'
+ *                     $ref: '#/components/schemas/UserApplication'
  *                 pagination:
  *                   type: object
  *                   properties:
@@ -134,16 +134,16 @@ applicationsRouter.get('/:id/resume', verifyAccessToken, downloadResume);
  *       500:
  *         description: Internal server error
  */
-// paginated list of applications
-applicationsRouter.get('/', verifyAccessToken, listApplications);
+// paginated list of userApplications
+userApplicationsRouter.get('/', verifyAccessToken, listApplications);
 
 // unbounded list (no pagination)
 /**
  * @swagger
- * /applications/all:
+ * /userApplications/all:
  *   get:
  *     tags: [Applications]
- *     summary: Get all applications without pagination (authenticated users only)
+ *     summary: Get all userApplications without pagination (authenticated users only)
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -152,29 +152,29 @@ applicationsRouter.get('/', verifyAccessToken, listApplications);
  *         schema:
  *           type: string
  *           enum: ['pending','reviewing','rejected','accepted']
- *         description: Filter by application status
+ *         description: Filter by userApplication status
  *     responses:
  *       200:
- *         description: Array of application objects
+ *         description: Array of userApplication objects
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Application'
+ *                 $ref: '#/components/schemas/UserApplication'
  *       401:
  *         description: Unauthorized
  *       500:
  *         description: Internal server error
  */
-applicationsRouter.get('/all', verifyAccessToken, listAllApplications);
+userApplicationsRouter.get('/all', verifyAccessToken, listAllApplications);
 
 /**
  * @swagger
- * /applications/{id}:
+ * /userApplications/{id}:
  *   get:
  *     tags: [Applications]
- *     summary: Get application by ID
+ *     summary: Get userApplication by ID
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -183,29 +183,29 @@ applicationsRouter.get('/all', verifyAccessToken, listAllApplications);
  *         required: true
  *         schema:
  *           type: string
- *         description: Application ID
+ *         description: UserApplication ID
  *     responses:
  *       200:
- *         description: Application found
+ *         description: UserApplication found
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
- *               $ref: '#/components/schemas/Application'
+ *               $ref: '#/components/schemas/UserApplication'
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Application not found
+ *         description: UserApplication not found
  *       500:
  *         description: Internal server error
  */
-applicationsRouter.get('/:id', verifyAccessToken, getApplicationById);
+userApplicationsRouter.get('/:id', verifyAccessToken, getApplicationById);
 
 /**
  * @swagger
- * /applications/{id}/status:
+ * /userApplications/{id}/status:
  *   patch:
  *     tags: [Applications]
- *     summary: Update status of an application
+ *     summary: Update status of an userApplication
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -214,34 +214,34 @@ applicationsRouter.get('/:id', verifyAccessToken, getApplicationById);
  *         required: true
  *         schema:
  *           type: string
- *         description: Application ID
+ *         description: UserApplication ID
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         userApplication/json:
  *           schema:
  *             $ref: '#/components/schemas/ApplicationStatusRequest'
  *     responses:
  *       200:
- *         description: Application status updated successfully
+ *         description: UserApplication status updated successfully
  *         content:
- *           application/json:
+ *           userApplication/json:
  *             schema:
- *               $ref: '#/components/schemas/Application'
+ *               $ref: '#/components/schemas/UserApplication'
  *       400:
  *         description: Invalid status value
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Application not found
+ *         description: UserApplication not found
  *       500:
  *         description: Internal server error
  */
 
-applicationsRouter.patch(
+userApplicationsRouter.patch(
   '/:id/status',
   verifyAccessToken,
   updateApplicationStatus,
 );
 
-export default applicationsRouter;
+export default userApplicationsRouter;

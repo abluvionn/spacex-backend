@@ -1,6 +1,6 @@
 # SpaceX Backend
 
-This repository contains a simple Node.js backend for a SpaceX application. It provides authentication and basic application management API endpoints.
+This repository contains a simple Node.js backend for a SpaceX Application. It provides authentication and basic Application management API endpoints.
 
 ## Project Structure
 
@@ -13,15 +13,15 @@ package.json
 swagger.js
 __tests__/
     controllers/
-        applicationController.test.js
+        userApplicationController.test.js
         authController.test.js
 middleware/
     auth.js
 models/
-    Application.js
+    UserApplication.js
     User.js
 routes/
-    applications.js
+    userApplications.js
     auth.js
 utils/
     formatValidationErrors.js
@@ -52,14 +52,14 @@ This project includes comprehensive unit tests for controllers using Jest.
 
 - Tests are located in the `__tests__` directory
 - Controller tests are organized by controller name
-- Tests cover authentication, application creation, and error handling scenarios
+- Tests cover authentication, Application creation, and error handling scenarios
 
-### Uploading an application
+### Uploading an Application
 
 You can submit the standard fields as JSON or multipart form data. To include a resume file, send a `multipart/form-data` request with a `resume` field:
 
 ```sh
-curl -X POST http://localhost:3000/api/applications \
+curl -X POST http://localhost:3000/api/userApplications \
   -H "Authorization: Bearer <token>" \
   -F "fullName=Jane Doe" \
   -F "phoneNumber=+15551234567" \
@@ -79,7 +79,7 @@ curl -X POST http://localhost:3000/api/applications \
 ## Models
 
 - `User.js` represents user data.
-- `Application.js` represents application data. Applications now include a `status` field (pending, reviewing, rejected, accepted, etc.) instead of a simple archived flag. Applications also support an optional `resume` upload; files are saved under `uploads/resumes` and a `resumeUrl` is exposed on returned documents.
+- `UserApplication.js` represents Application data. Applications now include a `status` field (pending, reviewing, rejected, accepted, etc.) instead of a simple archived flag. Applications also support an optional `resume` upload; files are saved under `uploads/resumes` and a `resumeUrl` is exposed on returned documents.
 
 ## Utils
 

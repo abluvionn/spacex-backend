@@ -65,7 +65,7 @@ const options = {
           type: 'object',
           properties: { accessToken: { type: 'string' } },
         },
-        Application: {
+        UserApplication: {
           type: 'object',
           properties: {
             _id: { type: 'string', example: '6967945bd6e92f8fd828ac24' },
@@ -99,7 +99,7 @@ const options = {
             },
             resumeUrl: {
               type: 'string',
-              example: '/api/applications/6967945bd6e92f8fd828ac24/resume',
+              example: '/api/userApplications/6967945bd6e92f8fd828ac24/resume',
             },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time' },

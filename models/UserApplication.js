@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 export const STATUS_ENUM = ['pending', 'reviewing', 'rejected', 'accepted'];
 
-const ApplicationSchema = new Schema(
+const UserApplicationSchema = new Schema(
   {
     fullName: {
       type: String,
@@ -67,7 +67,7 @@ const ApplicationSchema = new Schema(
   },
 );
 
-ApplicationSchema.methods.updateStatus = function (newStatus) {
+UserApplicationSchema.methods.updateStatus = function (newStatus) {
   if (STATUS_ENUM.includes(newStatus)) {
     this.status = newStatus;
     return this.save();
@@ -76,13 +76,13 @@ ApplicationSchema.methods.updateStatus = function (newStatus) {
 };
 
 // virtual property that clients can use to fetch the resume file
-ApplicationSchema.virtual('resumeUrl').get(function () {
+UserApplicationSchema.virtual('resumeUrl').get(function () {
   if (this.resumePath) {
-    return `applications/${this._id}/resume`;
+    return `userApplications/${this._id}/resume`;
   }
   return null;
 });
 
-const Application = model('Application', ApplicationSchema);
+const UserApplication = model('UserApplication', UserApplicationSchema);
 
-export default Application;
+export default UserApplication;

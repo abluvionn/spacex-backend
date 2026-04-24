@@ -21,8 +21,8 @@ app.get('/api', (_req, res) => {
 });
 app.use('/api/auth', (await import('./routes/auth.js')).default);
 app.use(
-  '/api/applications',
-  (await import('./routes/applications.js')).default,
+  '/api/userApplications',
+  (await import('./routes/userApplications.js')).default,
 );
 app.use('/api/docs', (await import('./swagger.js')).default);
 
