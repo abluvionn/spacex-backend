@@ -9,7 +9,7 @@ export const verifyAccessToken = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_ACCESS);
-    req.userId = decoded.userId;
+    req.adminId = decoded.adminId;
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
@@ -28,7 +28,7 @@ export const verifyRefreshToken = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_REFRESH);
-    req.userId = decoded.userId;
+    req.adminId = decoded.adminId;
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {

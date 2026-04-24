@@ -1,10 +1,10 @@
 import express from 'express';
 import { verifyAccessToken } from '../middleware/auth.js';
 import {
-  registerUser,
-  loginUser,
+  register,
+  login,
   refreshToken,
-  logoutUser,
+  logout,
 } from '../controllers/authController.js';
 
 const authRouter = express.Router();
@@ -18,7 +18,7 @@ const authRouter = express.Router();
  * /auth/register:
  *   post:
  *     tags: [Auth]
- *     summary: Register a new user
+ *     summary: Register a new admin
  *     security:
  *       - BearerAuth: []
  *     requestBody:
@@ -37,14 +37,14 @@ const authRouter = express.Router();
  *               properties:
  *                 accessToken:
  *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                 admin:
+ *                   $ref: '#/components/schemas/Admin'
  *       400:
  *         description: Email taken
  *       422:
  *         description: Validation error
  */
-authRouter.post('/register', verifyAccessToken, registerUser);
+authRouter.post('/register', verifyAccessToken, register);
 
 /**
  * @swagger
@@ -68,12 +68,12 @@ authRouter.post('/register', verifyAccessToken, registerUser);
  *               properties:
  *                 accessToken:
  *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                 admin:
+ *                   $ref: '#/components/schemas/Admin'
  *       401:
  *         description: Invalid credentials
  */
-authRouter.post('/login', loginUser);
+authRouter.post('/login', login);
 
 /**
  * @swagger
@@ -98,11 +98,11 @@ authRouter.post('/refresh-token', refreshToken);
  * /auth/logout:
  *   post:
  *     tags: [Auth]
- *     summary: Logout user (clears refresh cookie)
+ *     summary: Logout admin (clears refresh cookie)
  *     responses:
  *       200:
  *         description: Logged out
  */
-authRouter.post('/logout', logoutUser);
+authRouter.post('/logout', logout);
 
 export default authRouter;

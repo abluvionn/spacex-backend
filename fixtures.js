@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import config from './config.js';
-import User from './models/User.js';
+import Admin from './models/Admin.js';
 
 const dropCollection = async (db, collectionName) => {
   try {
@@ -10,7 +10,7 @@ const dropCollection = async (db, collectionName) => {
   }
 };
 
-const collections = ['users', 'userApplications'];
+const collections = ['admins', 'userApplications'];
 
 const run = async () => {
   try {
@@ -21,11 +21,11 @@ const run = async () => {
       await dropCollection(db, collectionName);
     }
 
-    await User.create([
+    await Admin.create([
       {
         email: config.admin.email,
         password: config.admin.password,
-        fullName: 'Admin User',
+        fullName: 'Admin',
         phone: '555-1234',
       },
     ]);

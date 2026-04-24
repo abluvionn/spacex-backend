@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 
 const SALT_WORK_FACTOR = 10;
 
-const UserSchema = new Schema(
+const AdminSchema = new Schema(
   {
     email: {
       type: String,
@@ -19,27 +19,27 @@ const UserSchema = new Schema(
     fullName: { type: String, required: [true, 'Full name is required'] },
     phone: { type: String, required: [true, 'Phone is required'] },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: true },
 );
 
-UserSchema.methods.checkPassword = async function (password) {
+AdminSchema.methods.checkPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-UserSchema.pre('save', async function () {
+AdminSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
 
   const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-UserSchema.set('toJSON', {
+AdminSchema.set('toJSON', {
   transform: (_doc, ret) => {
     delete ret.password;
     return ret;
   },
 });
 
-const User = model('User', UserSchema);
+const Admin = model('Admin', AdminSchema);
 
-export default User;
+export default Admin;

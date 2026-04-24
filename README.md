@@ -19,7 +19,7 @@ middleware/
     auth.js
 models/
     UserApplication.js
-    User.js
+    Admin.js
 routes/
     userApplications.js
     auth.js
@@ -78,7 +78,7 @@ curl -X POST http://localhost:3000/api/userApplications \
 
 ## Models
 
-- `User.js` represents user data.
+- `Admin.js` represents admin data.
 - `UserApplication.js` represents Application data. Applications now include a `status` field (pending, reviewing, rejected, accepted, etc.) instead of a simple archived flag. Applications also support an optional `resume` upload; files are saved under `uploads/resumes` and a `resumeUrl` is exposed on returned documents.
 
 ## Utils

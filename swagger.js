@@ -24,11 +24,11 @@ const options = {
         BearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       },
       schemas: {
-        User: {
+        Admin: {
           type: 'object',
           properties: {
             _id: { type: 'string', example: '6967945bd6e92f8fd828ac24' },
-            email: { type: 'string', example: 'user@example.com' },
+            email: { type: 'string', example: 'admin@example.com' },
             fullName: { type: 'string', example: 'John Doe' },
             phone: { type: 'string', example: '+1234567890' },
             createdAt: { type: 'string', format: 'date-time' },
@@ -42,7 +42,7 @@ const options = {
             email: {
               type: 'string',
               format: 'email',
-              example: 'user@example.com',
+              example: 'admin@example.com',
             },
             password: { type: 'string', example: 'password123' },
             fullName: { type: 'string', example: 'John Doe' },
@@ -56,7 +56,7 @@ const options = {
             email: {
               type: 'string',
               format: 'email',
-              example: 'user@example.com',
+              example: 'admin@example.com',
             },
             password: { type: 'string', example: 'password123' },
           },

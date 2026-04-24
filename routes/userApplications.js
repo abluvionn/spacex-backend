@@ -84,7 +84,7 @@ userApplicationsRouter.get('/:id/resume', verifyAccessToken, downloadResume);
  * /userApplications:
  *   get:
  *     tags: [Applications]
- *     summary: Get all userApplications (authenticated users only)
+ *     summary: Get all userApplications (authenticated admins only)
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -143,7 +143,7 @@ userApplicationsRouter.get('/', verifyAccessToken, listApplications);
  * /userApplications/all:
  *   get:
  *     tags: [Applications]
- *     summary: Get all userApplications without pagination (authenticated users only)
+ *     summary: Get all userApplications without pagination (authenticated admins only)
  *     security:
  *       - BearerAuth: []
  *     parameters:

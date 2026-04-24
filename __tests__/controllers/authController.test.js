@@ -5,11 +5,11 @@ import {
   refreshToken,
   logoutUser,
 } from '../../controllers/authController.js';
-import User from '../../models/User.js';
+import Admin from '../../models/Admin.js';
 import { generateTokens } from '../../services/authService.js';
 import jwt from 'jsonwebtoken';
 
-jest.mock('../../models/User.js');
+jest.mock('../../models/Admin.js');
 jest.mock('../../services/authService.js');
 jest.mock('jsonwebtoken', () => ({ verify: jest.fn() }));
 jest.mock('../../utils/formatValidationErrors.js', () => ({
@@ -28,17 +28,17 @@ describe('authController', () => {
     jest.clearAllMocks();
 
     mockUser = {
-      _id: 'user123',
+      _id: 'admin123',
       email: 'test@example.com',
-      fullName: 'Test User',
+      fullName: 'Test Admin',
       phone: '555-1234',
       password: 'hashed-password',
       save: jest.fn().mockResolvedValue(true),
       checkPassword: jest.fn(),
     };
 
-    User.mockImplementation(() => mockUser);
-    User.findOne = jest.fn();
+    Admin.mockImplementation(() => mockUser);
+    Admin.findOne = jest.fn();
 
     generateTokens.mockReturnValue({
       accessToken: 'access-token',
@@ -67,13 +67,13 @@ describe('authController', () => {
       };
     });
 
-    it('should register a new user and return tokens', async () => {
-      User.findOne.mockResolvedValue(null);
+    it('should register a new admin and return tokens', async () => {
+      Admin.findOne.mockResolvedValue(null);
 
       await registerUser(mockReq, mockRes, mockNext);
 
-      expect(User.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
-      expect(User).toHaveBeenCalledWith(
+      expect(Admin.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
+      expect(Admin).toHaveBeenCalledWith(
         expect.objectContaining({
           email: 'john@example.com',
           password: 'password123',
@@ -82,7 +82,7 @@ describe('authController', () => {
         }),
       );
       expect(mockUser.save).toHaveBeenCalled();
-      expect(generateTokens).toHaveBeenCalledWith('user123');
+      expect(generateTokens).toHaveBeenCalledWith('admin123');
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'refreshToken',
         'refresh-token',
@@ -91,12 +91,12 @@ describe('authController', () => {
       expect(mockRes.status).toHaveBeenCalledWith(201);
       expect(mockRes.send).toHaveBeenCalledWith({
         accessToken: 'access-token',
-        user: mockUser,
+        admin: mockUser,
       });
     });
 
     it('should return 400 when email already exists', async () => {
-      User.findOne.mockResolvedValue(mockUser);
+      Admin.findOne.mockResolvedValue(mockUser);
 
       await registerUser(mockReq, mockRes, mockNext);
 
@@ -108,7 +108,7 @@ describe('authController', () => {
     });
 
     it('should return 422 for validation errors', async () => {
-      User.findOne.mockResolvedValue(null);
+      Admin.findOne.mockResolvedValue(null);
 
       const validationError = new MongooseError.ValidationError();
       mockUser.save.mockRejectedValueOnce(validationError);
@@ -122,7 +122,7 @@ describe('authController', () => {
     });
 
     it('should call next for unexpected errors', async () => {
-      User.findOne.mockResolvedValue(null);
+      Admin.findOne.mockResolvedValue(null);
       const error = new Error('Database failure');
       mockUser.save.mockRejectedValueOnce(error);
 
@@ -143,14 +143,14 @@ describe('authController', () => {
     });
 
     it('should login with valid credentials and return tokens', async () => {
-      User.findOne.mockResolvedValue(mockUser);
+      Admin.findOne.mockResolvedValue(mockUser);
       mockUser.checkPassword.mockResolvedValue(true);
 
       await loginUser(mockReq, mockRes, mockNext);
 
-      expect(User.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
+      expect(Admin.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
       expect(mockUser.checkPassword).toHaveBeenCalledWith('password123');
-      expect(generateTokens).toHaveBeenCalledWith('user123');
+      expect(generateTokens).toHaveBeenCalledWith('admin123');
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'refreshToken',
         'refresh-token',
@@ -159,12 +159,12 @@ describe('authController', () => {
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.send).toHaveBeenCalledWith({
         accessToken: 'access-token',
-        user: mockUser,
+        admin: mockUser,
       });
     });
 
-    it('should return 400 when user is not found', async () => {
-      User.findOne.mockResolvedValue(null);
+    it('should return 400 when admin is not found', async () => {
+      Admin.findOne.mockResolvedValue(null);
 
       await loginUser(mockReq, mockRes, mockNext);
 
@@ -175,7 +175,7 @@ describe('authController', () => {
     });
 
     it('should return 400 when password is invalid', async () => {
-      User.findOne.mockResolvedValue(mockUser);
+      Admin.findOne.mockResolvedValue(mockUser);
       mockUser.checkPassword.mockResolvedValue(false);
 
       await loginUser(mockReq, mockRes, mockNext);
@@ -188,7 +188,7 @@ describe('authController', () => {
 
     it('should call next for unexpected errors', async () => {
       const error = new Error('Login failure');
-      User.findOne.mockRejectedValueOnce(error);
+      Admin.findOne.mockRejectedValueOnce(error);
 
       await loginUser(mockReq, mockRes, mockNext);
 
@@ -203,7 +203,7 @@ describe('authController', () => {
           refreshToken: 'old-refresh-token',
         },
       };
-      jwt.verify.mockReturnValue({ userId: 'user123' });
+      jwt.verify.mockReturnValue({ adminId: 'admin123' });
 
       await refreshToken(mockReq, mockRes);
 
@@ -211,7 +211,7 @@ describe('authController', () => {
         'old-refresh-token',
         expect.any(String),
       );
-      expect(generateTokens).toHaveBeenCalledWith('user123');
+      expect(generateTokens).toHaveBeenCalledWith('admin123');
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'refreshToken',
         'refresh-token',
