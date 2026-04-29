@@ -4,6 +4,11 @@ export const STATUS_ENUM = ['pending', 'reviewing', 'rejected', 'accepted'];
 
 const UserApplicationSchema = new Schema(
   {
+    driverId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Driver',
+      required: [true, 'Driver ID is required'],
+    },
     fullName: {
       type: String,
       required: [true, 'Full name is required'],

@@ -20,6 +20,8 @@ app.get('/api', (_req, res) => {
   res.send({ message: 'Welcome to the SpaceX backend API' });
 });
 app.use('/api/auth', (await import('./routes/auth.js')).default);
+app.use('/api/driver/auth', (await import('./routes/driverAuth.js')).default);
+app.use('/api/driver/applications', (await import('./routes/driverApplications.js')).default);
 app.use(
   '/api/userApplications',
   (await import('./routes/userApplications.js')).default,

@@ -35,6 +35,17 @@ const options = {
             updatedAt: { type: 'string', format: 'date-time' },
           },
         },
+        Driver: {
+          type: 'object',
+          properties: {
+            _id: { type: 'string', example: '6967945bd6e92f8fd828ac24' },
+            email: { type: 'string', example: 'driver@example.com' },
+            fullName: { type: 'string', example: 'John Doe' },
+            phoneNumber: { type: 'string', example: '+1234567890' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
         RegisterRequest: {
           type: 'object',
           required: ['email', 'password', 'fullName', 'phone'],
@@ -47,6 +58,20 @@ const options = {
             password: { type: 'string', example: 'password123' },
             fullName: { type: 'string', example: 'John Doe' },
             phone: { type: 'string', example: '+1234567890' },
+          },
+        },
+        DriverRegisterRequest: {
+          type: 'object',
+          required: ['email', 'password', 'fullName', 'phoneNumber'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'driver@example.com',
+            },
+            password: { type: 'string', example: 'password123' },
+            fullName: { type: 'string', example: 'John Doe' },
+            phoneNumber: { type: 'string', example: '+1234567890' },
           },
         },
         LoginRequest: {

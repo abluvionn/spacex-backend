@@ -10,7 +10,7 @@ const dropCollection = async (db, collectionName) => {
   }
 };
 
-const collections = ['admins', 'userApplications'];
+const collections = ['admins', 'drivers', 'userApplications'];
 
 const run = async () => {
   try {

@@ -66,7 +66,7 @@ export const refreshToken = (req, res) => {
   try {
     const decoded = jwt.verify(refreshToken, config.JwtRefreshSecret);
     const { accessToken, refreshToken: newRefreshToken } = generateTokens(
-      decoded.adminId,
+      decoded.userId,
     );
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
