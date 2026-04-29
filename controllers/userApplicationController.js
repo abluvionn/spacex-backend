@@ -126,56 +126,6 @@ const sendStatusUpdateEmail = (userApplication, status) => {
   }
 };
 
-export const createApplication = async (req, res, next) => {
-  try {
-    const {
-      fullName,
-      phoneNumber,
-      email,
-      cdlLicense,
-      state,
-      drivingExperience,
-      truckTypes,
-      longHaulTrips,
-      comments,
-    } = req.body || {};
-
-    let truckTypesArray = [];
-    if (truckTypes) {
-      const truckTypesObj =
-        typeof truckTypes === 'string' ? JSON.parse(truckTypes) : truckTypes;
-      truckTypesArray = Object.keys(truckTypesObj).filter(
-        (key) => truckTypesObj[key],
-      );
-    }
-
-    const userApplication = new UserApplication({
-      fullName,
-      phoneNumber,
-      email,
-      cdlLicense,
-      state,
-      drivingExperience,
-      truckTypes: truckTypesArray,
-      longHaulTrips,
-      comments,
-      resumePath: req.file ? req.file.path : undefined,
-      resumeFilename: req.file ? req.file.filename : undefined,
-    });
-
-    await userApplication.save();
-    res.status(201).send(userApplication);
-    sendAdminNotification(userApplication);
-  } catch (e) {
-    if (e instanceof Error.ValidationError) {
-      const structuredErrors = formatValidationErrors(e);
-      res.status(422).send({ error: structuredErrors });
-      return;
-    }
-    next(e);
-  }
-};
-
 export const downloadResume = async (req, res, next) => {
   try {
     const userApplication = await UserApplication.findById(req.params.id);

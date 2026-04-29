@@ -2,7 +2,6 @@ import express from 'express';
 import { verifyAccessToken } from '../middleware/auth.js';
 import { upload } from '../utils/upload.js';
 import {
-  createApplication,
   downloadResume,
   listApplications,
   listAllApplications,
@@ -11,40 +10,6 @@ import {
 } from '../controllers/userApplicationController.js';
 
 const userApplicationsRouter = express.Router();
-
-/**
- * @swagger
- * tags:
- *   - name: Applications
- *     description: UserApplication endpoints
- *
- * /userApplications:
- *   post:
- *     tags: [Applications]
- *     summary: Create a new userApplication (multipart/form-data with optional resume file)
- *     security:
- *       - BearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             $ref: '#/components/schemas/ApplicationRequest'
- *     responses:
- *       201:
- *         description: UserApplication created successfully
- *         content:
- *           userApplication/json:
- *             schema:
- *               $ref: '#/components/schemas/UserApplication'
- *       401:
- *         description: Unauthorized
- *       422:
- *         description: Validation error
- *       500:
- *         description: Internal server error
- */
-userApplicationsRouter.post('/', upload.single('resume'), createApplication);
 
 // serve raw resume file for a specific userApplication
 /**

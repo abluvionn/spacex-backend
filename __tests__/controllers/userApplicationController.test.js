@@ -1,4 +1,4 @@
-import { createApplication } from '../../controllers/userApplicationController.js';
+import { createApplication } from '../../controllers/driverApplicationController.js';
 import UserApplication from '../../models/UserApplication.js';
 import { Error as MongooseError } from 'mongoose';
 
@@ -6,9 +6,9 @@ import { Error as MongooseError } from 'mongoose';
 jest.mock('../../models/UserApplication.js');
 
 // Mock the sendAdminNotification function
-jest.mock('../../controllers/userApplicationController.js', () => {
+jest.mock('../../controllers/driverApplicationController.js', () => {
   const actual = jest.requireActual(
-    '../../controllers/userApplicationController.js',
+    '../../controllers/driverApplicationController.js',
   );
   return {
     ...actual,
@@ -32,7 +32,7 @@ jest.mock('../../utils/formatValidationErrors.js', () => ({
     .mockReturnValue({ fullName: 'Field is required' }),
 }));
 
-describe('userApplicationController', () => {
+describe('driverApplicationController', () => {
   describe('createApplication', () => {
     let mockReq;
     let mockRes;
