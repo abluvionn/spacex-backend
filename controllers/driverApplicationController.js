@@ -8,7 +8,7 @@ import path from 'path';
 export const createApplication = async (req, res, next) => {
   try {
     const driverId = req.userId;
-    
+
     // Check if driver has passed the knowledge test
     const driver = await Driver.findById(driverId);
     if (!driver) {
@@ -16,18 +16,38 @@ export const createApplication = async (req, res, next) => {
       return;
     }
     if (!driver.knowledgeTestPassed) {
-      res.status(403).send({ error: 'You must pass the knowledge test before creating an application.' });
-      return;
-    }
-    
-    // Check if driver already has an application
-    const existingApplication = await UserApplication.findOne({ driverId });
-    if (existingApplication) {
-      res.status(400).send({ error: 'You already have an application. Please update your existing application instead.' });
+      res
+        .status(403)
+        .send({
+          error:
+            'You must pass the knowledge test before creating an application.',
+        });
       return;
     }
 
-    const { fullName, phoneNumber, email, cdlLicense, state, drivingExperience, truckTypes, longHaulTrips, comments } = req.body || {};
+    // Check if driver already has an application
+    const existingApplication = await UserApplication.findOne({ driverId });
+    if (existingApplication) {
+      res
+        .status(400)
+        .send({
+          error:
+            'You already have an application. Please update your existing application instead.',
+        });
+      return;
+    }
+
+    const {
+      fullName,
+      phoneNumber,
+      email,
+      cdlLicense,
+      state,
+      drivingExperience,
+      truckTypes,
+      longHaulTrips,
+      comments,
+    } = req.body || {};
 
     let truckTypesArray = [];
     if (truckTypes) {
@@ -37,7 +57,7 @@ export const createApplication = async (req, res, next) => {
         (key) => truckTypesObj[key],
       );
     }
-    
+
     const applicationData = {
       driverId,
       fullName,
@@ -73,13 +93,16 @@ export const createApplication = async (req, res, next) => {
 export const getMyApplication = async (req, res, next) => {
   try {
     const driverId = req.userId;
-    const application = await UserApplication.findOne({ driverId }).populate('driverId', '-password');
-    
+    const application = await UserApplication.findOne({ driverId }).populate(
+      'driverId',
+      '-password',
+    );
+
     if (!application) {
       res.status(404).send({ error: 'You have no application yet.' });
       return;
     }
-    
+
     res.status(200).send(application);
   } catch (e) {
     next(e);
@@ -89,8 +112,18 @@ export const getMyApplication = async (req, res, next) => {
 export const updateMyApplication = async (req, res, next) => {
   try {
     const driverId = req.userId;
-    const { fullName, phoneNumber, email, cdlLicense, state, drivingExperience, truckTypes, longHaulTrips, comments } = req.body || {};
-    
+    const {
+      fullName,
+      phoneNumber,
+      email,
+      cdlLicense,
+      state,
+      drivingExperience,
+      truckTypes,
+      longHaulTrips,
+      comments,
+    } = req.body || {};
+
     const application = await UserApplication.findOne({ driverId });
     if (!application) {
       res.status(404).send({ error: 'You have no application yet.' });
@@ -103,7 +136,8 @@ export const updateMyApplication = async (req, res, next) => {
     if (email !== undefined) application.email = email;
     if (cdlLicense !== undefined) application.cdlLicense = cdlLicense;
     if (state !== undefined) application.state = state;
-    if (drivingExperience !== undefined) application.drivingExperience = drivingExperience;
+    if (drivingExperience !== undefined)
+      application.drivingExperience = drivingExperience;
     if (truckTypes !== undefined) application.truckTypes = truckTypes;
     if (longHaulTrips !== undefined) application.longHaulTrips = longHaulTrips;
     if (comments !== undefined) application.comments = comments;
@@ -133,13 +167,16 @@ export const updateMyApplication = async (req, res, next) => {
 export const getApplicationStatus = async (req, res, next) => {
   try {
     const driverId = req.userId;
-    const application = await UserApplication.findOne({ driverId }, { status: 1, _id: 1, updatedAt: 1 });
-    
+    const application = await UserApplication.findOne(
+      { driverId },
+      { status: 1, _id: 1, updatedAt: 1 },
+    );
+
     if (!application) {
       res.status(404).send({ error: 'You have no application yet.' });
       return;
     }
-    
+
     res.status(200).send(application);
   } catch (e) {
     next(e);

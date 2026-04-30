@@ -1,4 +1,7 @@
-import { getQuestions, evaluateTest } from '../services/knowledgeTestService.js';
+import {
+  getQuestions,
+  evaluateTest,
+} from '../services/knowledgeTestService.js';
 
 const getKnowledgeTestQuestions = (req, res) => {
   try {
@@ -15,7 +18,9 @@ const submitKnowledgeTest = async (req, res) => {
     const { answers } = req.body; // answers should be an object like {1: 'A', 2: 'B', ...}
 
     if (!answers || typeof answers !== 'object') {
-      return res.status(400).json({ error: 'Answers must be provided as an object' });
+      return res
+        .status(400)
+        .json({ error: 'Answers must be provided as an object' });
     }
 
     const result = await evaluateTest(driverId, answers);

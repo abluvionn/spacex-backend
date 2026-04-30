@@ -1,5 +1,8 @@
 import express from 'express';
-import { getKnowledgeTestQuestions, submitKnowledgeTest } from '../controllers/knowledgeTestController.js';
+import {
+  getKnowledgeTestQuestions,
+  submitKnowledgeTest,
+} from '../controllers/knowledgeTestController.js';
 import { verifyAccessToken } from '../middleware/auth.js';
 
 const router = express.Router();
