@@ -6,6 +6,7 @@ import config from './config.js';
 import { rateLimit } from 'express-rate-limit';
 
 const app = express();
+app.set('trust proxy', 1);
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 100, // limit each IP to 100 requests per windowMs
