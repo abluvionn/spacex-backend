@@ -24,6 +24,10 @@ const DriverSchema = new Schema(
       type: String,
       required: [true, 'Phone number is required'],
     },
+    knowledgeTestPassed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { versionKey: false, timestamps: true },
 );

@@ -1,4 +1,5 @@
 import UserApplication from '../models/UserApplication.js';
+import Driver from '../models/Driver.js';
 import { Error } from 'mongoose';
 import { formatValidationErrors } from '../utils/formatValidationErrors.js';
 import fs from 'fs';
@@ -7,6 +8,17 @@ import path from 'path';
 export const createApplication = async (req, res, next) => {
   try {
     const driverId = req.userId;
+    
+    // Check if driver has passed the knowledge test
+    const driver = await Driver.findById(driverId);
+    if (!driver) {
+      res.status(404).send({ error: 'Driver not found' });
+      return;
+    }
+    if (!driver.knowledgeTestPassed) {
+      res.status(403).send({ error: 'You must pass the knowledge test before creating an application.' });
+      return;
+    }
     
     // Check if driver already has an application
     const existingApplication = await UserApplication.findOne({ driverId });
