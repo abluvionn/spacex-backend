@@ -7,14 +7,14 @@ import config from '../config.js';
 
 export const register = async (req, res, next) => {
   try {
-    const { email, password, fullName, phone } = req.body || {};
+    const { email, password, fullName, phoneNumber } = req.body || {};
     const adminExists = await Admin.findOne({ email });
     if (adminExists) {
       res.status(400).send({ error: 'This email is already taken.' });
       return;
     }
 
-    const admin = new Admin({ email, password, fullName, phone });
+    const admin = new Admin({ email, password, fullName, phoneNumber });
     await admin.save();
     const { accessToken, refreshToken } = generateTokens(admin._id);
     res.cookie('refreshToken', refreshToken, {

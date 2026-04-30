@@ -30,7 +30,7 @@ const options = {
             _id: { type: 'string', example: '6967945bd6e92f8fd828ac24' },
             email: { type: 'string', example: 'admin@example.com' },
             fullName: { type: 'string', example: 'John Doe' },
-            phone: { type: 'string', example: '+1234567890' },
+            phoneNumber: { type: 'string', example: '+1234567890' },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time' },
           },
@@ -48,7 +48,7 @@ const options = {
         },
         RegisterRequest: {
           type: 'object',
-          required: ['email', 'password', 'fullName', 'phone'],
+          required: ['email', 'password', 'fullName', 'phoneNumber'],
           properties: {
             email: {
               type: 'string',
@@ -57,7 +57,7 @@ const options = {
             },
             password: { type: 'string', example: 'password123' },
             fullName: { type: 'string', example: 'John Doe' },
-            phone: { type: 'string', example: '+1234567890' },
+            phoneNumber: { type: 'string', example: '+1234567890' },
           },
         },
         DriverRegisterRequest: {

@@ -17,7 +17,7 @@ const AdminSchema = new Schema(
       minlength: [5, 'Password must be at least 5 characters long'],
     },
     fullName: { type: String, required: [true, 'Full name is required'] },
-    phone: { type: String, required: [true, 'Phone is required'] },
+    phoneNumber: { type: String, required: [true, 'Phone is required'] },
   },
   { versionKey: false, timestamps: true },
 );

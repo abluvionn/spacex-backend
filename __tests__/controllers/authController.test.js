@@ -31,7 +31,7 @@ describe('authController', () => {
       _id: 'admin123',
       email: 'test@example.com',
       fullName: 'Test Admin',
-      phone: '555-1234',
+      phoneNumber: '555-1234',
       password: 'hashed-password',
       save: jest.fn().mockResolvedValue(true),
       checkPassword: jest.fn(),
@@ -62,7 +62,7 @@ describe('authController', () => {
           email: 'john@example.com',
           password: 'password123',
           fullName: 'John Doe',
-          phone: '555-7890',
+          phoneNumber: '555-7890',
         },
       };
     });
@@ -78,7 +78,7 @@ describe('authController', () => {
           email: 'john@example.com',
           password: 'password123',
           fullName: 'John Doe',
-          phone: '555-7890',
+          phoneNumber: '555-7890',
         }),
       );
       expect(mockUser.save).toHaveBeenCalled();

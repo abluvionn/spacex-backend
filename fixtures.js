@@ -26,7 +26,7 @@ const run = async () => {
         email: config.admin.email,
         password: config.admin.password,
         fullName: 'Admin',
-        phone: '555-1234',
+        phoneNumber: '555-1234',
       },
     ]);
 
